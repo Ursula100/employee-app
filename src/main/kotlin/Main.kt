@@ -1,7 +1,5 @@
 package Main.kt
 
-import java.text.DecimalFormat
-
 val firstName = "Joe";
 val surname = "Soap";
 val gender = "m";
@@ -30,14 +28,27 @@ val deduction = cws_Monthly_Deduction + paye + prsi
 
 
 fun main() {
-    println("\t\t Monthly Pay Slip \n\n")
-    println("Employee Name: $firstName $surname(${gender.uppercase()}) \t\t Employee ID: $employee_Id \n\n")
-    println("PAYMENT DETAILS \t\t\t  DEDUCTIONS DETAILS \n")
-    println("Salary: ${round(monthlySalary)} \t\t\t\t PAYE: ${round(paye)} \n")
-    println("Bonus: ${round(monthly_Bonus)} \t\t\t\t\t PRSI: ${round(prsi)} \n")
-    println("\t\t\t\t Cycle To Work: ${round(cws_Monthly_Deduction)} \n\n")
-    println("Gross: ${round(gross)} \t\t Total Deductions: ${round(deduction)} \n\n")
-    println("\t\t NET PAY: ${round(gross - deduction)}")
+    val payslip = """            
+        |                                     Monthly Pay Slip
+        |                                     
+        |  Employee Name: $firstName $surname(${gender.uppercase()})         Employee ID: $employee_Id 
+        | 
+        |  PAYMENT DETAILS 			                                         DEDUCTIONS DETAILS 
+        | 
+        |  Salary: ${round(monthlySalary)} 				                     PAYE: ${round(paye)} 
+        |  Bonus: ${round(monthly_Bonus)} 					                 PRSI: ${round(prsi)} 
+        | 				                   Cycle To Work: ${round(cws_Monthly_Deduction)} 
+        | 				                     
+        |  Gross: ${round(gross)} 		                                     Total Deductions: ${round(deduction)}
+        |  
+        |  NET PAY: ${round(gross - deduction)}
+    """.trimMargin()
+
+    printPaySlip(payslip)
+}
+
+fun printPaySlip(employee: Any){
+    print(employee)
 }
 
 
