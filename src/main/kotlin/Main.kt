@@ -1,29 +1,6 @@
 package Main.kt
 
-val firstName = "Joe";
-val surname = "Soap";
-val gender = "m";
-val employee_Id = "6143"
-val gross_Salary = 67_543.21;
-val paye = 38.5
-val prsi = 5.2;
-val annual_Bonus = 1_450.50;
-val cws_Monthly_Deduction = 54.33;
-
-
-fun round(number: Double): String {
-    return "%.2f".format(number)
-}
-
-fun getMonthlySalary() : Double = gross_Salary/12
-fun monthly_Bonus() : Double = annual_Bonus/12
-fun getMonthlyPAYE() : Double = getMonthlySalary() *paye/100
-fun getMonthlyPRSI() : Double = getMonthlySalary()*prsi/100
-fun getGrossMonthlyPay() : Double = getMonthlySalary() + monthly_Bonus()
-fun getTotalMonthlyDeductions() : Double = cws_Monthly_Deduction + getMonthlyPAYE() + getMonthlyPRSI()
-fun getNetMonthlyPay() : Double = getGrossMonthlyPay() - getTotalMonthlyDeductions()
-
-
+var employee =  Employee("Joe", "Soap", 'm', 6143, 67543.21, 38.5, 5.2, 1450.50, 54.33)
 
 fun main() {
     print(getPaySlip())
@@ -49,31 +26,45 @@ fun main() {
 fun getPaySlip() : String {
     val payslip = """            
         |                                     Monthly Pay Slip
+        | _____________________________________________________________________________________________________________
         |                                     
-        |  Employee Name: ${getFullName()}                         Employee ID: $employee_Id 
+        |  Employee Name: ${getFullName()}                         Employee ID: ${employee.employee_Id}
+        | _____________________________________________________________________________________________________________
         | 
-        |  PAYMENT DETAILS 			                            DEDUCTIONS DETAILS 
+        |  PAYMENT DETAILS 			                         DEDUCTIONS DETAILS 
         | 
-        |  Salary: ${round(getMonthlySalary())} 				                     PAYE: ${round(getMonthlyPAYE())} 
-        |  Bonus: ${round(monthly_Bonus())} 					                 PRSI: ${round(getMonthlyPRSI())} 
-        | 				           Cycle To Work: ${round(cws_Monthly_Deduction)} 
-        | 				                     
-        |  Gross: ${round(getGrossMonthlyPay())} 		                        Total Deductions: ${round(getTotalMonthlyDeductions())}
-        |  
-        |  NET PAY: ${round(getNetMonthlyPay())}
+        |  Salary: ${getMonthlySalary()} 				                     PAYE: ${getMonthlyPAYE()} 
+        |  Bonus: ${monthly_Bonus()} 					                 PRSI: ${getMonthlyPRSI()} 
+        |                                                     Cycle To Work: ${employee.cws_Monthly_Deduction}
+        | ______________________________________________________________________________________________________________		                     
+        |  Gross: ${getGrossMonthlyPay()} 		                        Total Deductions: ${getTotalMonthlyDeductions()}
+        | ______________________________________________________________________________________________________________
+        |  NET PAY: ${getNetMonthlyPay()}
     """.trimMargin()
 
     return payslip
 }
 
-fun getFullName() : String {
-    var name : String = when (gender) {
-        "m" -> "Mr $firstName $surname"
-        "f" -> "Ms $firstName $surname"
-        else -> "$firstName $surname"
-    }
-    return name
+fun getFullName() = when (employee.gender){
+    'm', 'M' -> "Mr. ${employee.firstName} ${employee.surname}"
+    'f', 'F' -> "Ms.  ${employee.firstName} ${employee.surname}"
+    else ->  "${employee.firstName} ${employee.surname}"
 }
+
+
+
+fun round(number: Double): Double {
+    return "%.2f".format(number).toDouble()
+}
+
+fun getMonthlySalary() : Double = round(employee.gross_Salary/12)
+fun monthly_Bonus() : Double = round(employee.annual_Bonus/12)
+fun getMonthlyPAYE() : Double = round(getMonthlySalary() * employee.payePercentage/100)
+fun getMonthlyPRSI() : Double = round(getMonthlySalary()* employee.prsiPercentage/100)
+fun getGrossMonthlyPay() : Double = round(getMonthlySalary() + monthly_Bonus())
+fun getTotalMonthlyDeductions() : Double = round(employee.cws_Monthly_Deduction + getMonthlyPAYE() + getMonthlyPRSI())
+fun getNetMonthlyPay() : Double = round(getGrossMonthlyPay() - getTotalMonthlyDeductions())
+
 
 fun menu() : Int {
     print("""
@@ -89,4 +80,6 @@ fun menu() : Int {
          Enter Option : """)
     return readLine()!!.toInt()
 }
+
+
 
