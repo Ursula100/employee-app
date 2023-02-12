@@ -5,50 +5,88 @@ val surname = "Soap";
 val gender = "m";
 val employee_Id = "6143"
 val gross_Salary = 67_543.21;
-val paye_Percentage = 38.5
-val prsi_Percentage = 5.2;
+val paye = 38.5
+val prsi = 5.2;
 val annual_Bonus = 1_450.50;
 val cws_Monthly_Deduction = 54.33;
 
 
-fun monthly(number : Double) =  number/12
-fun fromPercentage(percentage: Double) : Double{
-    return (percentage * (monthlySalary/100))
-}
 fun round(number: Double): String {
     return "%.2f".format(number)
 }
 
-val monthlySalary : Double = monthly(gross_Salary)
-val monthly_Bonus : Double = monthly(annual_Bonus)
-val paye = fromPercentage(paye_Percentage)
-val prsi = fromPercentage(paye_Percentage)
-val gross = monthlySalary + monthly_Bonus
-val deduction = cws_Monthly_Deduction + paye + prsi
+fun getMonthlySalary() : Double = gross_Salary/12
+fun monthly_Bonus() : Double = annual_Bonus/12
+fun getMonthlyPAYE() : Double = getMonthlySalary() *paye/100
+fun getMonthlyPRSI() : Double = getMonthlySalary()*prsi/100
+fun getGrossMonthlyPay() : Double = getMonthlySalary() + monthly_Bonus()
+fun getTotalMonthlyDeductions() : Double = cws_Monthly_Deduction + getMonthlyPAYE() + getMonthlyPRSI()
+fun getNetMonthlyPay() : Double = getGrossMonthlyPay() - getTotalMonthlyDeductions()
+
 
 
 fun main() {
+    print(getPaySlip())
+
+    var input : Int
+    do {
+        input = menu()
+        when(input) {
+            1 -> println("Monthly Salary: ${getMonthlySalary()}")
+            2 -> println("Monthly PRSI: ${getMonthlyPRSI()}")
+            3 ->println("Monthly PAYE: ${getMonthlyPAYE()}")
+            4 -> println("Monthly Gross Pay: ${getGrossMonthlyPay()}")
+            5 -> println("Monthly Total Deductions: ${getTotalMonthlyDeductions()}")
+            6 -> println("Monthly Net Pay: ${getNetMonthlyPay()}")
+            7 -> println(getPaySlip())
+            -1 -> println("Exiting App")
+            else -> println("Invalid Option")
+                }
+                println()
+            } while (input != -1)
+}
+
+fun getPaySlip() : String {
     val payslip = """            
         |                                     Monthly Pay Slip
         |                                     
-        |  Employee Name: $firstName $surname(${gender.uppercase()})         Employee ID: $employee_Id 
+        |  Employee Name: ${getFullName()}                         Employee ID: $employee_Id 
         | 
-        |  PAYMENT DETAILS 			                                         DEDUCTIONS DETAILS 
+        |  PAYMENT DETAILS 			                            DEDUCTIONS DETAILS 
         | 
-        |  Salary: ${round(monthlySalary)} 				                     PAYE: ${round(paye)} 
-        |  Bonus: ${round(monthly_Bonus)} 					                 PRSI: ${round(prsi)} 
-        | 				                   Cycle To Work: ${round(cws_Monthly_Deduction)} 
+        |  Salary: ${round(getMonthlySalary())} 				                     PAYE: ${round(getMonthlyPAYE())} 
+        |  Bonus: ${round(monthly_Bonus())} 					                 PRSI: ${round(getMonthlyPRSI())} 
+        | 				           Cycle To Work: ${round(cws_Monthly_Deduction)} 
         | 				                     
-        |  Gross: ${round(gross)} 		                                     Total Deductions: ${round(deduction)}
+        |  Gross: ${round(getGrossMonthlyPay())} 		                        Total Deductions: ${round(getTotalMonthlyDeductions())}
         |  
-        |  NET PAY: ${round(gross - deduction)}
+        |  NET PAY: ${round(getNetMonthlyPay())}
     """.trimMargin()
 
-    printPaySlip(payslip)
+    return payslip
 }
 
-fun printPaySlip(employee: Any){
-    print(employee)
+fun getFullName() : String {
+    var name : String = when (gender) {
+        "m" -> "Mr $firstName $surname"
+        "f" -> "Ms $firstName $surname"
+        else -> "$firstName $surname"
+    }
+    return name
 }
 
+fun menu() : Int {
+    print("""
+         Employee Menu for ${getFullName()}
+           1. Monthly Salary
+           2. Monthly PRSI
+           3. Monthly PAYE
+           4. Monthly Gross Pay
+           5. Monthly Total Deductions
+           6. Monthly Net Pay
+           7. Full Payslip
+          -1. Exit
+         Enter Option : """)
+    return readLine()!!.toInt()
+}
 
