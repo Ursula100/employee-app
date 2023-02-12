@@ -1,7 +1,7 @@
 package Main.kt
 
-import EmployeeAPI
-import main.kt.Employee
+import ie.setu.controllers.EmployeeAPI
+import ie.setu.models.Employee
 
 var employees = EmployeeAPI()
 
